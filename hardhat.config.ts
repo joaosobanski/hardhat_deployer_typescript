@@ -5,15 +5,11 @@ import '@nomiclabs/hardhat-etherscan'
 require('dotenv').config();
 
 const {
-  PRIVATE_KEY_LOCAL,
   PRIVATE_KEY,
-  PRIVATE_KEY_ARBITRUM,
   API_KEY_MUMBAI,
   API_KEY_ARBITRUM,
   API_KEY_BSCTESTNET,
-  PRIVATE_KEY_BSCSCAN,
   API_KEY_BSCSCAN,
-  PRIVATE_KEY_BSCSCAN_TEST,
 } = process.env;
 
 const config: HardhatUserConfig = {
@@ -32,7 +28,7 @@ const config: HardhatUserConfig = {
     bscscan: {
       url: "https://bsc-dataseed1.binance.org/",
       // accounts: [PRIVATE_KEY_BSCSCAN_TEST]
-      accounts: [PRIVATE_KEY_BSCSCAN as string]
+      accounts: [PRIVATE_KEY as string]
     },
     avalanchetestnet: {
       url: "https://api.avax-test.network/ext/bc/C/rpc",
@@ -40,11 +36,11 @@ const config: HardhatUserConfig = {
     },
     arbitrum: {
       url: "https://arb1.arbitrum.io/rpc/",
-      accounts: [PRIVATE_KEY_ARBITRUM as string]
+      accounts: [PRIVATE_KEY as string]
     },
     dev: {
       url: "http://127.0.0.1:7545",
-      accounts: [PRIVATE_KEY_LOCAL as string]
+      accounts: [PRIVATE_KEY as string]
     },
   },
 
