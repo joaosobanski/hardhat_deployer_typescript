@@ -19,7 +19,7 @@ const config: HardhatUserConfig = {
     hardhat: {
     },
     mumbai: {
-      url: rpc.mumbai,
+      url: rpc.mumbai.rpc,
       accounts: [PRIVATE_KEY as string]
     },
     bsctestnet: {
@@ -31,7 +31,7 @@ const config: HardhatUserConfig = {
       // accounts: [PRIVATE_KEY_BSCSCAN_TEST]
       accounts: [PRIVATE_KEY as string]
     },
-    avalanchetestnet: {
+    fuji: {
       url: "https://api.avax-test.network/ext/bc/C/rpc",
       accounts: [PRIVATE_KEY as string]
     },

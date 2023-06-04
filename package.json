@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "addlp": "ts-node src/addLiquidity.ts",
+    "rmlp": "ts-node src/removeLiquidity.ts",
+    "wrap": "ts-node src/wrap.ts",
+    "with": "ts-node src/withdraw.ts"
   },
   "keywords": [],
   "author": "",

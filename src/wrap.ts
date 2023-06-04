@@ -1,6 +1,6 @@
 import Web3 from 'web3';
 import rpc from '../rpc.json'
-import address from '../address.json'
+import Address from '../address.json'
 import logger from './utils/logger';
 require('dotenv').config();
 
@@ -10,7 +10,9 @@ const {
 } = process.env
 
 async function wrap() {
-    const web3 = new Web3(rpc.mumbai);
+
+    const address = Address.mumbai
+    const web3 = new Web3(rpc.fuji.rpc);
     const wethContract = new web3.eth.Contract(require('./abi/weth.json'), address.weth);
 
     const balance = await web3.eth.getBalance(PUBLIC_KEY as string);
@@ -21,7 +23,7 @@ async function wrap() {
     }
 
     const nonce = await web3.eth.getTransactionCount(PUBLIC_KEY as string);
-    const wrap_amount = '10'
+    const wrap_amount = '0.01'
     const tx = {
         from: PUBLIC_KEY as string,
         to: address.weth,
@@ -34,10 +36,11 @@ async function wrap() {
     const signedTx = await web3.eth.accounts.signTransaction(tx, PRIVATE_KEY as string);
 
     if (signedTx)
-        await web3.eth.sendSignedTransaction(signedTx.rawTransaction as string).then(e => logger.info({ transactionHash: e.transactionHash }, `Wraped ${wrap_amount} ETH`))
+        await web3.eth.sendSignedTransaction(signedTx.rawTransaction as string)
+            .then(e => logger.info(`Withdraw ${wrap_amount} ETH\n ${rpc.mumbai.explorer}/tx/${e.transactionHash}`))
+
     else
         logger.error("fail on wrap!")
-
 }
 
 wrap();

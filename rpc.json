@@ -1,4 +1,10 @@
-
 {
-    "mumbai": "https://matic-mumbai.chainstacklabs.com"
+    "mumbai": {
+        "rpc": "https://matic-mumbai.chainstacklabs.com",
+        "explorer": "https://mumbai.polygonscan.com"
+    },
+    "fuji": {
+        "rpc": "https://avalanche-fuji-c-chain.publicnode.com",
+        "explorer": "https://testnet.snowtrace.io"
+    }
 }
