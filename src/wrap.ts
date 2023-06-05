@@ -12,7 +12,7 @@ const {
 async function wrap() {
 
     const address = Address.mumbai
-    const web3 = new Web3(rpc.fuji.rpc);
+    const web3 = new Web3(rpc.mumbai.rpc);
     const wethContract = new web3.eth.Contract(require('./abi/weth.json'), address.weth);
 
     const balance = await web3.eth.getBalance(PUBLIC_KEY as string);
@@ -23,7 +23,7 @@ async function wrap() {
     }
 
     const nonce = await web3.eth.getTransactionCount(PUBLIC_KEY as string);
-    const wrap_amount = '0.01'
+    const wrap_amount = '10'
     const tx = {
         from: PUBLIC_KEY as string,
         to: address.weth,

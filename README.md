@@ -14,11 +14,9 @@ npx hardhat run scripts/deploy.ts
 npx hardhat run scripts/deploy-name.ts --network mumbai
 
 npx hardhat run scripts/deploy.ts --network mumbai
-npx hardhat run scripts/deploy-usdt.ts --network fuji
+npx hardhat run scripts/deploy-usdt.ts --network mumbai
 
-npx hardhat verify 0x8C5C5d7Cef843fE4C905DB1681DAA343B2b89bC4 --network mumbai 1685794753
-
-npx hardhat verify --contract "contracts/token/USDT.sol:USDT" --network mumbai 0xeb0e5750EEDED5B943097e9E2A148AF7318Ce5Ae
+npx hardhat verify --contract "contracts/token/USDT.sol:USDT" --network mumbai 0x1F86B1D2a1b65B663F4AcAF881CD0AE979044Bd5
 
 ```
 

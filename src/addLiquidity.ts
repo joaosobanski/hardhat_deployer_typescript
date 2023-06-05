@@ -12,11 +12,11 @@ const {
 
 async function addLiquidity() {
 
-    const web3 = new Web3(rpc.fuji.rpc);
+    const web3 = new Web3(rpc.mumbai.rpc);
     const address = Address.mumbai
 
     const token = address.usdt
-    let amountETH = '0.01'
+    let amountETH = '10'
     amountETH = web3.utils.toWei(amountETH, 'ether')
 
     const tokenContract = new web3.eth.Contract(require('./abi/token.json'), token);
@@ -41,17 +41,17 @@ async function addLiquidity() {
     logger.info({ balanceToken }, "balance token")
     logger.info({ amountETH }, "balance weth")
 
-    logger.info("approving")
+    logger.info("approving token")
     let tx = await tokenContract.methods.approve(address.router, balanceToken);
     await signTx(web3, token, tx, PUBLIC_KEY as string, PRIVATE_KEY as string)
         .then((e: any) => logger.info(`approved ${web3.utils.fromWei(balanceToken, 'ether')} Token\n${rpc.mumbai.explorer}/tx/${e.transactionHash}`))
 
-    logger.info("approving")
+    logger.info("approving weth")
     tx = await wethContract.methods.approve(address.router, amountETH)
     await signTx(web3, address.weth, tx, PUBLIC_KEY as string, PRIVATE_KEY as string)
         .then((e: any) => logger.info(`approved ${web3.utils.fromWei(amountETH, 'ether')} WETH\n${rpc.mumbai.explorer}/tx/${e.transactionHash}`))
 
-    console.log('add')
+    console.log('add liquidity')
     const liquidity = await routerContract.methods.addLiquidity(
         token,
         address.weth,
@@ -64,10 +64,6 @@ async function addLiquidity() {
 
     await signTx(web3, address.router, liquidity, PUBLIC_KEY as string, PRIVATE_KEY as string)
         .then((e: any) => logger.info(`${rpc.mumbai.explorer}/tx/${e.transactionHash}`));
-
-    // tx = wethContract.methods.withdraw(balanceWETH);
-    // const networkId = await web3.eth.net.getId();
-
 
 }
 

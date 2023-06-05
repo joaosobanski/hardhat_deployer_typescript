@@ -1,8 +1,8 @@
 {
     "mumbai": {
-        "weth": "0x1eA63A10908f0932403abe991d232c4dd60ec4c8",
-        "usdt": "0x322888cEC17fEC7e6ed4d5A6D892067c183DbEA7",
-        "factory": "0x42da99875a7f44bEea8AC547829cc612357Db572",
-        "router": "0x1aE222EcFf787Ae50f0AD4B78F94dFdBDF56308E"
+        "weth": "0x7f17088DB5a2e455a22AFa3D2aFBe00b5e95F4dE",
+        "usdt": "0x1F86B1D2a1b65B663F4AcAF881CD0AE979044Bd5",
+        "factory": "0xB980Fa931d00E334e13f630Be349C8F65098C9F0",
+        "router": "0x349Ac8CDE4e7736D1daaf2E38F3FF26059100621"
     }
 }
