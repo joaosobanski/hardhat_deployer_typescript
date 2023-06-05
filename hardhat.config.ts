@@ -2,7 +2,7 @@ import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import '@nomiclabs/hardhat-ethers'
 import '@nomiclabs/hardhat-etherscan'
-import rpc from './rpc.json'
+
 require('dotenv').config();
 
 const {
@@ -19,7 +19,7 @@ const config: HardhatUserConfig = {
     hardhat: {
     },
     mumbai: {
-      url: rpc.mumbai.rpc,
+      url: "https://matic-mumbai.chainstacklabs.com",
       accounts: [PRIVATE_KEY as string]
     },
     bsctestnet: {
