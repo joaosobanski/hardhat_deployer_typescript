@@ -1,8 +1,7 @@
 import Web3 from 'web3';
-import rpc from '../rpc.json'
-import Address from '../address.json'
 import logger from './utils/logger';
 import { signTx } from './sign';
+import getConfig from './config';
 require('dotenv').config();
 
 const {
@@ -12,31 +11,33 @@ const {
 
 async function removeLiquidity() {
 
-    const web3 = new Web3(rpc.fuji.rpc);
-    const address = Address.mumbai
+    const config = getConfig(80001);
+    if (!config)
+        return;
 
-    const token = address.usdt
+    const web3 = new Web3(config.rpc);
 
-    const routerContract = new web3.eth.Contract(require('./abi/router.json'), address.router);
-    const factoryContract = new web3.eth.Contract(require('./abi/factory.json'), address.factory);
+    const token = config.usdt
 
-    let pairAddress = await factoryContract.methods.getPair(address.weth, token).call()
+    const routerContract = new web3.eth.Contract(require('./abi/router.json'), config.router);
+    const factoryContract = new web3.eth.Contract(require('./abi/factory.json'), config.factory);
+
+    let pairAddress = await factoryContract.methods.getPair(config.weth, token).call()
 
     console.log(pairAddress)
-    return;
 
     const pairContract = new web3.eth.Contract(require('./abi/pair.json'), pairAddress);
 
     const myBalanceLP = await pairContract.methods.balanceOf(PUBLIC_KEY).call();
 
     console.log(`approval LP ${web3.utils.fromWei(myBalanceLP, 'ether')} Tokens from router`)
-    let tx = await pairContract.methods.approve(address.router, myBalanceLP);
+    let tx = await pairContract.methods.approve(config.router, myBalanceLP);
 
     await signTx(web3, pairAddress, tx, PUBLIC_KEY as string, PRIVATE_KEY as string)
-        .then((e: any) => logger.info(`${rpc.mumbai.explorer}/tx/${e.transactionHash}`));
+        .then((e: any) => logger.info(`${config.explorer}/tx/${e.transactionHash}`));
 
     const liquidity = await routerContract.methods.removeLiquidity(
-        address.weth,
+        config.weth,
         token,
         myBalanceLP,
         0,
@@ -44,8 +45,8 @@ async function removeLiquidity() {
         PUBLIC_KEY,
         99999999999);
 
-    await signTx(web3, address.router, liquidity, PUBLIC_KEY as string, PRIVATE_KEY as string)
-        .then((e: any) => logger.info(`${rpc.mumbai.explorer}/tx/${e.transactionHash}`));
+    await signTx(web3, config.router, liquidity, PUBLIC_KEY as string, PRIVATE_KEY as string)
+        .then((e: any) => logger.info(`${config.explorer}/tx/${e.transactionHash}`));
 
 }
 

@@ -1,7 +1,6 @@
 import Web3 from 'web3';
-import rpc from '../rpc.json'
-import Address from '../address.json'
 import logger from './utils/logger';
+import getConfig from './config';
 require('dotenv').config();
 
 const {
@@ -11,10 +10,13 @@ const {
 
 async function withdraw() {
 
-    const address = Address.mumbai
+    const config = getConfig(80001);
+    if (!config)
+        return;
 
-    const web3 = new Web3(rpc.mumbai.rpc);
-    const wethContract = new web3.eth.Contract(require('./abi/weth.json'), address.weth);
+
+    const web3 = new Web3(config.rpc);
+    const wethContract = new web3.eth.Contract(require('./abi/weth.json'), config.weth);
 
     const balanceWETH = await wethContract.methods.balanceOf(PUBLIC_KEY).call();
 
@@ -40,7 +42,7 @@ async function withdraw() {
 
     const signedTx = await web3.eth.accounts.signTransaction(
         {
-            to: address.weth,
+            to: config.weth,
             data,
             gas: gas,
             gasPrice,
@@ -51,7 +53,8 @@ async function withdraw() {
     );
     if (signedTx)
         await web3.eth.sendSignedTransaction(signedTx.rawTransaction as string)
-            .then(e => logger.info(`Withdraw ${web3.utils.fromWei(balanceWETH, 'ether')} ETH\n${rpc.mumbai.explorer}/tx/${e.transactionHash}`))
+            .then(e => logger.info(`Withdraw ${web3.utils.fromWei(balanceWETH, 'ether')} ETH
+            \n${config.explorer}/tx/${e.transactionHash}`))
     else
         logger.error("fail on withdraw!")
 

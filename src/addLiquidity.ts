@@ -1,8 +1,7 @@
 import Web3 from 'web3';
-import rpc from '../rpc.json'
-import Address from '../address.json'
 import logger from './utils/logger';
 import { signTx } from './sign';
+import getConfig from './config';
 require('dotenv').config();
 
 const {
@@ -12,17 +11,20 @@ const {
 
 async function addLiquidity() {
 
-    const web3 = new Web3(rpc.mumbai.rpc);
-    const address = Address.mumbai
+    const config = getConfig(80001);
+    if (!config)
+        return;
 
-    const token = address.usdt
+    const web3 = new Web3(config.rpc);
+
+    const token = config.usdt
     let amountETH = '10'
     amountETH = web3.utils.toWei(amountETH, 'ether')
 
     const tokenContract = new web3.eth.Contract(require('./abi/token.json'), token);
-    const wethContract = new web3.eth.Contract(require('./abi/weth.json'), address.weth);
-    const routerContract = new web3.eth.Contract(require('./abi/router.json'), address.router);
-    const factoryContract = new web3.eth.Contract(require('./abi/factory.json'), address.factory);
+    const wethContract = new web3.eth.Contract(require('./abi/weth.json'), config.weth);
+    const routerContract = new web3.eth.Contract(require('./abi/router.json'), config.router);
+    const factoryContract = new web3.eth.Contract(require('./abi/factory.json'), config.factory);
 
     const balanceWETH = await wethContract.methods.balanceOf(PUBLIC_KEY).call();
 
@@ -31,10 +33,10 @@ async function addLiquidity() {
         return;
     }
 
-    // const txPair = await factoryContract.methods.createPair(token, address.weth)
+    // const txPair = await factoryContract.methods.createPair(token, config.weth)
 
-    // await signTx(web3, address.factory, txPair, PUBLIC_KEY as string, PRIVATE_KEY as string)
-    //     .then((e: any) => logger.info(`${rpc.mumbai.explorer}/tx/${e.transactionHash}`));
+    // await signTx(web3, config.factory, txPair, PUBLIC_KEY as string, PRIVATE_KEY as string)
+    //     .then((e: any) => logger.info(`${config.explorer}/tx/${e.transactionHash}`));
 
     logger.info("getting balance")
     const balanceToken = await tokenContract.methods.balanceOf(PUBLIC_KEY).call();
@@ -42,19 +44,19 @@ async function addLiquidity() {
     logger.info({ amountETH }, "balance weth")
 
     logger.info("approving token")
-    let tx = await tokenContract.methods.approve(address.router, balanceToken);
+    let tx = await tokenContract.methods.approve(config.router, balanceToken);
     await signTx(web3, token, tx, PUBLIC_KEY as string, PRIVATE_KEY as string)
-        .then((e: any) => logger.info(`approved ${web3.utils.fromWei(balanceToken, 'ether')} Token\n${rpc.mumbai.explorer}/tx/${e.transactionHash}`))
+        .then((e: any) => logger.info(`approved ${web3.utils.fromWei(balanceToken, 'ether')} Token\n${config.explorer}/tx/${e.transactionHash}`))
 
     logger.info("approving weth")
-    tx = await wethContract.methods.approve(address.router, amountETH)
-    await signTx(web3, address.weth, tx, PUBLIC_KEY as string, PRIVATE_KEY as string)
-        .then((e: any) => logger.info(`approved ${web3.utils.fromWei(amountETH, 'ether')} WETH\n${rpc.mumbai.explorer}/tx/${e.transactionHash}`))
+    tx = await wethContract.methods.approve(config.router, amountETH)
+    await signTx(web3, config.weth, tx, PUBLIC_KEY as string, PRIVATE_KEY as string)
+        .then((e: any) => logger.info(`approved ${web3.utils.fromWei(amountETH, 'ether')} WETH\n${config.explorer}/tx/${e.transactionHash}`))
 
     console.log('add liquidity')
     const liquidity = await routerContract.methods.addLiquidity(
         token,
-        address.weth,
+        config.weth,
         balanceToken,
         amountETH,
         0,
@@ -62,8 +64,8 @@ async function addLiquidity() {
         PUBLIC_KEY,
         99999999999);
 
-    await signTx(web3, address.router, liquidity, PUBLIC_KEY as string, PRIVATE_KEY as string)
-        .then((e: any) => logger.info(`${rpc.mumbai.explorer}/tx/${e.transactionHash}`));
+    await signTx(web3, config.router, liquidity, PUBLIC_KEY as string, PRIVATE_KEY as string)
+        .then((e: any) => logger.info(`${config.explorer}/tx/${e.transactionHash}`));
 
 }
 
